@@ -2,12 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Default Renovate preset for dixneuf19 repos",
   "extends": [
-    "config:recommended",
+    "config:best-practices",
     ":automergeMinor",
-    ":automergeBranch",
-    ":maintainLockFilesWeekly"
+    ":automergeBranch"
   ],
   "minimumReleaseAge": "3 days",
+  "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
       "description": "Python minor/major base image bumps need manual review",
