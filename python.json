@@ -3,7 +3,7 @@
   "description": "Disable automerge for Python base image updates",
   "packageRules": [
     {
-      "matchPackagePatterns": ["python"],
+      "matchPackageNames": ["/python/"],
       "automerge": false
     }
   ]
