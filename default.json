@@ -1,0 +1,12 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Default Renovate preset for dixneuf19 repos",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":automergeMinor",
+    ":automergeBranch",
+    ":maintainLockFilesWeekly"
+  ],
+  "minimumReleaseAge": "3 days"
+}
