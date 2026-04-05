@@ -7,5 +7,12 @@
     ":automergeBranch",
     ":maintainLockFilesWeekly"
   ],
-  "minimumReleaseAge": "3 days"
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "description": "Python minor/major base image bumps need manual review",
+      "matchPackageNames": ["/python/"],
+      "automerge": false
+    }
+  ]
 }
