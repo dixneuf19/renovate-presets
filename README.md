@@ -13,21 +13,10 @@ Reference in your repo's `renovate.json`:
 }
 ```
 
-### Available presets
+### What's included
 
-| Preset | Description |
-|--------|-------------|
-| `local>dixneuf19/renovate-presets` | Default: `config:recommended`, automerge minor, branch automerge, weekly lock file maintenance, 3-day release cooldown |
-| `local>dixneuf19/renovate-presets:python` | Disable automerge for Python base image updates |
-
-### Example with Python preset
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>dixneuf19/renovate-presets",
-    "local>dixneuf19/renovate-presets:python"
-  ]
-}
-```
+- `config:recommended` (dependency dashboard, semantic commits, monorepo grouping, etc.)
+- Automerge minor/patch updates (merged directly to branch, no PR noise)
+- Weekly lock file maintenance
+- 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
+- Python Docker base image updates require manual review (no automerge)
