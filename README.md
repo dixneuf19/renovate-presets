@@ -17,6 +17,7 @@ Reference in your repo's `renovate.json`:
 
 - `config:best-practices` (dependency dashboard, semantic commits, monorepo grouping, Docker/GitHub Actions digest pinning, abandoned package warnings, config migration, weekly lock file maintenance)
 - Automerge minor/patch updates (merged directly to branch, no PR noise)
+- Automerge digest updates, so pinned Docker/GitHub Actions digests refresh on their own
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
 - Python Docker base image updates require manual review (no automerge)
