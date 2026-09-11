@@ -21,3 +21,24 @@ Reference in your repo's `renovate.json`:
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
 - Python Docker base image updates require manual review (no automerge)
+- Release cooldown relaxed to `timestamp-optional` on registries that publish no release timestamp, so their updates are not held back forever
+- No release cooldown on digest updates, which have no release date of their own
+
+### Release cooldown and container registries
+
+Renovate's `docker` datasource only reports a release timestamp for Docker Hub,
+where it reads `tag_last_pushed`. Every other registry returns nothing usable.
+Since `minimumReleaseAgeBehaviour` defaults to `timestamp-required`, an update
+with no timestamp is marked pending forever: no branch, no PR, just a permanent
+entry under "Pending Status Checks" on the dependency dashboard.
+
+This also catches `oci://` Helm chart dependencies, which Renovate resolves
+through the `docker` datasource rather than the `helm` one.
+
+The preset therefore sets `minimumReleaseAgeBehaviour: timestamp-optional` for
+the registries we use that cannot be aged. Docker Hub keeps the full 3-day
+cooldown, since there it actually works.
+
+Upstream: [renovate#37196](https://github.com/renovatebot/renovate/issues/37196),
+[renovate#38656](https://github.com/renovatebot/renovate/issues/38656),
+[renovate#39064](https://github.com/renovatebot/renovate/issues/39064).
