@@ -21,8 +21,28 @@ Reference in your repo's `renovate.json`:
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
 - Python Docker base image updates require manual review (no automerge)
+- `0.x` minor updates require manual review, since per semver they may break anything
 - Release cooldown relaxed to `timestamp-optional` on registries that publish no release timestamp, so their updates are not held back forever
 - No release cooldown on digest updates, which have no release date of their own
+
+### Why `0.x` minors are not automerged
+
+Semver says a `0.y.z` release may break anything on a `y` bump. Renovate does
+not encode that: `getUpdateType()` compares version segments positionally, so
+`0.11.1 -> 0.13.2` is a `minor` and `:automergeMinor` would merge it without
+review. In practice that can be a whole major application upgrade.
+
+Renovate does have an `isBreaking` flag that gets this right, and the `semver`,
+`npm` and `helm` versioning modules all report `0.11.1 -> 0.13.2` as breaking.
+It is not usable here for two reasons: the `docker` versioning module does not
+implement it (so `oci://` Helm charts fall back to `updateType === 'major'`,
+i.e. false), and nothing in the automerge path or in `packageRules` reads it.
+
+The rule is written as `matchCurrentVersion: "/^0\\./"` rather than `"<1.0.0"`
+on purpose. A range goes through `versioningApi.matches()`, which `docker`
+versioning inherits from `GenericVersioningApi` as plain equality, so `"<1.0.0"`
+silently matches nothing for exactly the deps that need it most. The regex form
+is evaluated before the range path and works under every versioning module.
 
 ### Release cooldown and container registries
 

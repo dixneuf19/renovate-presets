@@ -16,6 +16,12 @@
       "automerge": false
     },
     {
+      "description": "Per semver a 0.x minor may break anything, but getUpdateType() is positional so Renovate calls it a minor and :automergeMinor would land it unreviewed. Matched by regex rather than \"<1.0.0\": the range form goes through versioningApi.matches(), which the docker versioning module (used by every oci:// Helm chart) implements as plain equality, so it silently never matches",
+      "matchCurrentVersion": "/^0\\./",
+      "matchUpdateTypes": ["minor"],
+      "automerge": false
+    },
+    {
       "description": "The docker datasource only reports a release timestamp for Docker Hub, so on every other registry the timestamp-required default leaves updates pending forever (renovate#37196, renovate#38656, renovate#39064). This also covers oci:// Helm charts, which resolve through the docker datasource",
       "matchDatasources": ["docker"],
       "matchPackageNames": [
