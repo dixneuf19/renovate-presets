@@ -32,11 +32,17 @@ not encode that: `getUpdateType()` compares version segments positionally, so
 `0.11.1 -> 0.13.2` is a `minor` and `:automergeMinor` would merge it without
 review. In practice that can be a whole major application upgrade.
 
-Renovate does have an `isBreaking` flag that gets this right, and the `semver`,
-`npm` and `helm` versioning modules all report `0.11.1 -> 0.13.2` as breaking.
-It is not usable here for two reasons: the `docker` versioning module does not
-implement it (so `oci://` Helm charts fall back to `updateType === 'major'`,
-i.e. false), and nothing in the automerge path or in `packageRules` reads it.
+Renovate does have an `isBreaking` flag that gets this right, and it can be read
+from `packageRules` via `matchJsonata: ["isBreaking = true"]`. That does not help
+for `oci://` charts: `isBreaking` comes from the versioning module, the `docker`
+versioning module does not implement it, and the fallback is
+`updateType === 'major'`, which is false here. So the same immich bump that
+`helm` versioning reports as breaking is reported as non-breaking once the chart
+is consumed over OCI, and a JSONata rule would let it through.
+
+This is worth knowing if you reach for `isBreaking` elsewhere: it is reliable
+under `semver`, `npm`, `helm`, `cargo`, `composer` and `python` versioning, and
+absent under `docker` and everything else built on `GenericVersioningApi`.
 
 The rule is written as `matchCurrentVersion: "/^0\\./"` rather than `"<1.0.0"`
 on purpose. A range goes through `versioningApi.matches()`, which `docker`
