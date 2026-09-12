@@ -16,7 +16,7 @@ Reference in your repo's `renovate.json`:
 ### What's included
 
 - `config:best-practices` (dependency dashboard, semantic commits, monorepo grouping, Docker/GitHub Actions digest pinning, abandoned package warnings, config migration, weekly lock file maintenance)
-- Automerge minor/patch updates (merged directly to branch, no PR noise)
+- Automerge minor/patch updates, through a PR so repo checks gate the merge
 - Automerge digest updates, so pinned Docker/GitHub Actions digests refresh on their own
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
@@ -24,6 +24,23 @@ Reference in your repo's `renovate.json`:
 - `0.x` minor updates require manual review, since per semver they may break anything
 - Release cooldown relaxed to `timestamp-optional` on registries that publish no release timestamp, so their updates are not held back forever
 - No release cooldown on digest updates, which have no release date of their own
+
+### Why automerge goes through a PR
+
+`:automergeBranch` is deliberately not used. It commits straight to the base
+branch and only opens a PR when tests fail, which is quieter but silently
+disables the checks that matter. Repo CI is usually wired to `on: pull_request`,
+so on a bare Renovate branch it never runs. Renovate then sees no status check,
+declines to automerge without one, and falls back to opening a PR anyway. The
+result is the worst of both: the PR noise is still there and nothing merges on
+its own.
+
+With the default `automergeType: "pr"` the PR is opened first, the repo's checks
+run against it, and the merge happens once they are green.
+
+`platformAutomerge` additionally needs "Allow auto-merge" enabled on the
+repository. Without it Renovate still merges, just on its next run after the
+checks pass rather than immediately.
 
 ### Why `0.x` minors are not automerged
 
