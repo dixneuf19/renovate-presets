@@ -4,8 +4,7 @@
   "extends": [
     "config:best-practices",
     ":automergeMinor",
-    ":automergeDigest",
-    ":automergeBranch"
+    ":automergeDigest"
   ],
   "minimumReleaseAge": "3 days",
   "osvVulnerabilityAlerts": true,
