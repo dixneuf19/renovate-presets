@@ -10,8 +10,37 @@
   "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
-      "description": "Python minor/major base image bumps need manual review",
-      "matchPackageNames": ["/python/"],
+      "description": "Group non-major GitHub Actions bumps into one PR",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pinDigest"],
+      "matchDepNames": ["!python"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Group Python linters, formatters and test tooling; majors still get their own group PR",
+      "matchDatasources": ["pypi"],
+      "matchPackageNames": [
+        "black",
+        "isort",
+        "flake8",
+        "ruff",
+        "mypy",
+        "pre-commit",
+        "coverage",
+        "pytest",
+        "pytest-*"
+      ],
+      "groupName": "python dev tools"
+    },
+    {
+      "description": "One PR moves the Python runtime everywhere it is declared: Docker base image, .python-version, requires-python, setup-python",
+      "matchDepNames": ["python"],
+      "groupName": "python runtime"
+    },
+    {
+      "description": "Python minor/major runtime bumps need manual review. Patch and digest bumps still automerge",
+      "matchDepNames": ["python"],
+      "matchUpdateTypes": ["major", "minor"],
       "automerge": false
     },
     {
@@ -35,9 +64,14 @@
       "minimumReleaseAgeBehaviour": "timestamp-optional"
     },
     {
-      "description": "A digest is not a release and carries no timestamp of its own",
-      "matchUpdateTypes": ["digest", "pinDigest"],
+      "description": "Digests, pins and lock file maintenance are not releases and carry no timestamp, so under timestamp-required their stability-days check stays pending forever",
+      "matchUpdateTypes": ["digest", "pin", "pinDigest", "lockFileMaintenance"],
       "minimumReleaseAge": null
+    },
+    {
+      "description": ":automergeDigest only covers digest refreshes; also automerge the initial digest pin",
+      "matchUpdateTypes": ["pinDigest"],
+      "automerge": true
     }
   ],
   "logLevelRemap": [

@@ -17,13 +17,14 @@ Reference in your repo's `renovate.json`:
 
 - `config:best-practices` (dependency dashboard, semantic commits, monorepo grouping, Docker/GitHub Actions digest pinning, abandoned package warnings, config migration, weekly lock file maintenance)
 - Automerge minor/patch updates, through a PR so repo checks gate the merge
-- Automerge digest updates, so pinned Docker/GitHub Actions digests refresh on their own
+- Automerge digest updates and initial digest pins, so pinned Docker/GitHub Actions digests refresh on their own
+- Grouped PRs: non-major GitHub Actions bumps, Python dev tooling (linters, formatters, pytest), and the Python runtime across every file that declares it
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
-- Python Docker base image updates require manual review (no automerge)
+- Python runtime minor/major updates require manual review (no automerge); patch and digest bumps still automerge. Matched on the exact dep name `python`, so `python-dotenv` or `actions/setup-python` are not caught
 - `0.x` minor updates require manual review, since per semver they may break anything
 - Release cooldown relaxed to `timestamp-optional` on registries that publish no release timestamp, so their updates are not held back forever
-- No release cooldown on digest updates, which have no release date of their own
+- No release cooldown on digest, pin and lock file maintenance updates, which have no release date of their own. Under `timestamp-required` their `renovate/stability-days` check would otherwise stay pending forever and block automerge
 
 ### Why automerge goes through a PR
 
