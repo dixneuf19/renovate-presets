@@ -24,7 +24,9 @@ Reference in your repo's `renovate.json`:
 - Python runtime minor/major updates require manual review (no automerge); patch and digest bumps still automerge. Matched on the exact dep name `python`, so `python-dotenv` or `actions/setup-python` are not caught
 - `0.x` minor updates require manual review, since per semver they may break anything
 - Release cooldown relaxed to `timestamp-optional` on registries that publish no release timestamp, so their updates are not held back forever
-- No release cooldown on digest, pin and lock file maintenance updates, which have no release date of their own. Under `timestamp-required` their `renovate/stability-days` check would otherwise stay pending forever and block automerge
+- Digest updates keep the 3-day cooldown: on Docker Hub it is aged against `tag_last_pushed`, so a re-pushed tag is held. GitHub Actions are pinned to a full semver tag, and a digest change without a version change (a force-pushed tag) is never automerged
+- No release cooldown on pins, which freeze what the reference already resolves to
+- Lock file maintenance runs with `timestamp-optional` so it can automerge. Renovate forwards the 3-day cooldown to npm and Poetry; uv repos need `exclude-newer = "3 days"` under `[tool.uv]` to get the same protection on transitive deps
 
 ### Why automerge goes through a PR
 

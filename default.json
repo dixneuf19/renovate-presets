@@ -3,6 +3,7 @@
   "description": "Default Renovate preset for dixneuf19 repos",
   "extends": [
     "config:best-practices",
+    "helpers:pinGitHubActionDigestsToSemver",
     ":automergeMinor",
     ":automergeDigest"
   ],
@@ -64,14 +65,25 @@
       "minimumReleaseAgeBehaviour": "timestamp-optional"
     },
     {
-      "description": "Digests, pins and lock file maintenance are not releases and carry no timestamp, so under timestamp-required their stability-days check stays pending forever",
-      "matchUpdateTypes": ["digest", "pin", "pinDigest", "lockFileMaintenance"],
+      "description": "A pin freezes what the reference already resolves to and brings in no new code, so a cooldown only prolongs the unpinned state (Renovate docs, minimum-release-age.md#pindigest-updates)",
+      "matchUpdateTypes": ["pin", "pinDigest"],
       "minimumReleaseAge": null
     },
     {
-      "description": ":automergeDigest only covers digest refreshes; also automerge the initial digest pin",
+      "description": ":automergeDigest only covers digest refreshes; also automerge the initial pin",
       "matchUpdateTypes": ["pinDigest"],
       "automerge": true
+    },
+    {
+      "description": "Lock file maintenance has no timestamp, so timestamp-required leaves it pending forever. The 3-day value is kept because Renovate forwards it to npm (--before) and Poetry (POETRY_SOLVER_MIN_RELEASE_AGE); uv repos enforce it through [tool.uv] exclude-newer",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "minimumReleaseAgeBehaviour": "timestamp-optional"
+    },
+    {
+      "description": "Actions are pinned to a full semver tag, so a digest change without a version change means the tag was force-pushed (the tj-actions/changed-files attack). github-tags ages it against the original release date, so the cooldown cannot catch it: review by hand",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": false
     }
   ],
   "logLevelRemap": [
