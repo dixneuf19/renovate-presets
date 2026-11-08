@@ -18,7 +18,7 @@ Reference in your repo's `renovate.json`:
 - `config:best-practices` (dependency dashboard, semantic commits, monorepo grouping, Docker/GitHub Actions digest pinning, abandoned package warnings, config migration, weekly lock file maintenance)
 - Automerge minor/patch updates, through a PR so repo checks gate the merge
 - Automerge digest updates and initial digest pins, so pinned Docker/GitHub Actions digests refresh on their own
-- Grouped PRs: non-major GitHub Actions bumps, Python dev tooling (linters, formatters, pytest), and the Python runtime across every file that declares it
+- Grouped PRs: non-major GitHub Actions bumps, majors of the `docker/*` actions (which move their Node runtime together), Python dev tooling (linters, formatters, pytest), and the Python runtime across every file that declares it
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
 - Python runtime minor/major updates require manual review (no automerge); patch and digest bumps still automerge. Matched on the exact dep name `python`, so `python-dotenv` or `actions/setup-python` are not caught

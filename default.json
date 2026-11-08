@@ -18,6 +18,13 @@
       "groupName": "GitHub Actions"
     },
     {
+      "description": "The docker/* actions move their Node runtime together, so their majors land as one PR",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["docker/**"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "docker actions (major)"
+    },
+    {
       "description": "Group Python linters, formatters and test tooling; majors still get their own group PR",
       "matchDatasources": ["pypi"],
       "matchPackageNames": [
