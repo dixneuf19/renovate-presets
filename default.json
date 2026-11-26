@@ -9,6 +9,8 @@
   ],
   "minimumReleaseAge": "3 days",
   "osvVulnerabilityAlerts": true,
+  "prConcurrentLimit": 25,
+  "prHourlyLimit": 10,
   "packageRules": [
     {
       "description": "Group non-major GitHub Actions bumps into one PR",
