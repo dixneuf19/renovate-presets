@@ -19,6 +19,7 @@ Reference in your repo's `renovate.json`:
 - Automerge minor/patch updates, through a PR so repo checks gate the merge
 - Automerge digest updates and initial digest pins, so pinned Docker/GitHub Actions digests refresh on their own
 - Grouped PRs: non-major GitHub Actions bumps, majors of the `docker/*` actions (which move their Node runtime together), Python dev tooling (linters, formatters, pytest), and the Python runtime across every file that declares it
+- PR limits raised to 25 open and 10 per hour (from 10 and 2). PRs that need manual review (majors, `0.x` minors) stay open and count toward the limit, so with the defaults they fill every slot and automergeable patches sit behind them in the dashboard's "Rate-Limited" section
 - 3-day release cooldown (`minimumReleaseAge`) for supply chain protection
 - OSV vulnerability alerts (includes OpenSSF malicious packages feed)
 - Python runtime minor/major updates require manual review (no automerge); patch and digest bumps still automerge. Matched on the exact dep name `python`, so `python-dotenv` or `actions/setup-python` are not caught
